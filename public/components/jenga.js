@@ -1,5 +1,11 @@
 // https://incandescent-psychedelic-spark.glitch.me/components/jenga.js 
 
+/**
+ * This function contains a little json parser to make creating shape templates easier.
+ * See examples in some of the functions below to see how the json is formatted.
+ * Right now, this function also sets some other basic attributes onto the create shape,
+ * but this can be changed in the future.
+*/
 function addShapeTemplate(json, id) {
 				
 	//Query assets in order to setup template
@@ -7,8 +13,8 @@ function addShapeTemplate(json, id) {
 	// create a new template variable
 	let newTemplate = document.createElement("template");
 	// create template id
-	// newTemplate.id = "interactable-ball-media-2";
   newTemplate.id = id;
+  
 	// create a new entity for the template so we can append it to the assets later
 	// normally this is done in the Hubs.html "bootstrap" file
 	let newEntity = document.createElement("a-entity");
@@ -66,8 +72,6 @@ function addShapeTemplate(json, id) {
 	newEntity.setAttribute("set-unowned-body-kinematic", "");
 	// sets the remote hover target component on the object
 	newEntity.setAttribute("is-remote-hover-target", "");
-  
-  
 				
 	// the tags component allows you to filter the collisions and interactable
 	// qualities of the entity.  We can reuse bh to set all it's values
@@ -136,7 +140,6 @@ function addShapeTemplate(json, id) {
 
 	// Add the new schema to NAF. and declare the networked components and their update 
 	// sensitivity using the function above if they modify the transforms.
-  /*
 	NAF.schemas.add({
 		template: "#" + id,
 		components: [
@@ -155,14 +158,11 @@ function addShapeTemplate(json, id) {
 			"media-loader",
 			"material",
 			"pinnable"
-		]
+		],
 	});
-	*/
 }
 
 window.mod_addShapeFromTemplate = function(id) {  
-	// if(document.querySelector("a-entity[camera-cube-env]") == null){
-
   var el = document.createElement("a-entity");
   el.setAttribute("networked", { 
     template: "#" + id 
@@ -181,81 +181,33 @@ window.mod_addShapeFromTemplate = function(id) {
   
   el.object3D.position.y = 2;
   AFRAME.scenes[0].appendChild(el);
-		
-	//}else{
-	//	console.log("a ball already exists");
-	//}
-	
+
   return el;
 };
 
-window.mod_addShape = function(attributes, id) {
-	addShapeTemplate(attributes, id);
-  // mod_addShapeFromTemplate(id)
+window.mod_addShape = function(json, id) {
+	addShapeTemplate(json, id);
+  var el = mod_addShapeFromTemplate(id);
   
-	// if(document.querySelector("a-entity[camera-cube-env]") == null){
-
+  /*
   var el = document.createElement("a-entity");
   el.setAttribute("networked", { 
     template: "#" + id 
   });
   
-  
-  /*
-  // networkId: 'button',
-  // owner: 'scene',
-  entity.setAttribute('networked', {
-    template: '#color-media',
-    networkId: 'button',
-    owner: 'scene',
-  })
-  */
-  
   el.object3D.position.y = 2;
   AFRAME.scenes[0].appendChild(el);
-		
-	//}else{
-	//	console.log("a ball already exists");
-	//}
-	
+  */
+
   return el;
 };
 
+/**
+ * This function adds some nice lighting to the scene.
+ * Right now, the light object it creates also has physics attached to it.
+ * This should likely be changed in the future.
+ */
 window.mod_addLighting = function() {
-  // primitive: cylinder; radius: 0.25; height: 2;
-  // bh = document.createAttribute("material");
-	// bh.value = "color:tomato;metalness:1.0;roughness:.8;";
-  /*
-  var json = {
-    "geometry": {
-      "primitive": "cylinder",
-      "radius": 0.25,
-      "height": 2,
-    }
-  };
-  */
-  /*
-  "position": {
-      "x": 5,
-      "y": 10,
-      "z": 5,
-    },
-  */
-  /*
-  var json = {
-    "light": {
-      "type": "ambient",
-      "color": "#CCC",
-      "intensity": "0.6"
-    },
-    "geometry": {
-      "primitive": "box",
-      "width": 0.5,
-      "height": 0.5,
-      "depth": 1.5,
-    },
-  };
-  */
   var json = {
     "light": {
       "type": "hemisphere",
@@ -280,6 +232,10 @@ window.mod_addLighting = function() {
 	return shape;
 };
 
+/**
+ * This function creates some blocks to help visualize the 3D axis of the world.
+ * This function is for debugging purposes only.
+ */
 window.mod_addAxis = function() {
   // primitive: cylinder; radius: 0.25; height: 2;
   // bh = document.createAttribute("material");
@@ -329,6 +285,9 @@ window.mod_addAxis = function() {
   zShape.object3D.position.z = 20;
 };
 
+/**
+ * This function creates the templates for the jenga blocks.
+ */
 window.mod_addJengaBrickTemplate = function() {
   // single-action-button="event: click"
   // randomize-networked-color="event: click"
@@ -359,6 +318,11 @@ window.mod_addJengaBrickTemplate = function() {
   addShapeTemplate(json, id);
 };
 
+/**
+ * This function uses the existing jenga block template to create a new jenga block.
+ * Requires the jenga block to already be created.
+ * The brick id corresponds to the order in which the jenga block was created.
+ */
 window.mod_addJengaBrickFromTemplate = function(brickId) {
   var id = "jenga-brick";
   var shape = mod_addShapeFromTemplate(id);
@@ -372,57 +336,24 @@ window.mod_addJengaBrickFromTemplate = function(brickId) {
 	return shape;
 };
 
-window.mod_addJengaBrick = function(id) {
-  // primitive: cylinder; radius: 0.25; height: 2;
-  // bh = document.createAttribute("material");
-	// bh.value = "color:tomato;metalness:1.0;roughness:.8;";
-  /*
-  var json = {
-    "geometry": {
-      "primitive": "cylinder",
-      "radius": 0.25,
-      "height": 2,
-    }
-  };
-  */
-  var json = {
-    "geometry": {
-      "primitive": "box",
-      "width": 2.5 / 3.0,
-      "height": 1.5 / 3.0,
-      "depth": 7.5 / 3.0,
-    },
-    "material": {
-      "color": "#DEB887",
-      "metalness": 0.0,
-      "roughness": 1.0,
-      "emissiveIntensity": 0.25
-    },
-  };
-  // making all of the bricks have this tag causes a bunch of weird behaviors over the network
-	// var id = "interactable-box-media";
-
-  var shape = mod_addShape(json, id);
-	return shape;
-};
-
 var jengaBlocks = [];
 
 /**
-Creates the templates required to make a Jenga tower as well as other setup steps
-*/
+ * Creates the templates required to make a Jenga tower as well as other setup steps.
+ */
 window.mod_setupJengaTower = function() {
   mod_addJengaBrickTemplate();
 };
 mod_setupJengaTower();
 
-/*
-// ownership gets transferred once you click on an object
-if (NAF.utils.isMine(this.networkedEntity)) {
-
-}
+/**
+ * Creates a Jenga tower at the origin specified in the function.
+ * This function currently requires a global array containing all the created jenga blocks
+ * The first time this function is run, it populates the global array with jenga blocks
+ * After the tower has already been initialized, it sets the position of the corresponding jenga block.
+ * In the future, whether or not the jenga tower has been initialized likely needs to be networked,
+ * otherwise multiple towers may be able to created in the same location at once
 */
-
 window.mod_addJengaTower = function() { // NAF
   // initialized = false;
   // mod_removeJengaTower();
@@ -443,29 +374,31 @@ window.mod_addJengaTower = function() { // NAF
   var index = 0;
   for (var level = 0; level < levels; level++) {
     for (var row = 0; row < rows; row++) {
-      // var shape = mod_addJengaBrick("brick-" + row);
-      // var shape = mod_addJengaBrick("jenga-brick");
-      // var shape = mod_addJengaBrickFromTemplate();
       var shape;
       if (!initialized) {
         // create a brick from the template for the first time
         shape = mod_addJengaBrickFromTemplate(index);
         
+        /*
         if (shape != null && NAF.connection.isConnected()) {
-          // NAF.utils.takeOwnership(shape);
-          shape.setAttribute('material', { color: Math.random() * 0xffffff });
+          NAF.utils.takeOwnership(shape);
         }
+        */
       } else {
         // get the shape from the list of shapes
-        // shape = jengaBlocks[index];
-        shape = document.querySelector("#naf-jenga-brick-" + index);
+        shape = jengaBlocks[index];
+        // or get the shape from the dom (this may work better for networking)
+        // shape = document.querySelector("#naf-jenga-brick-" + index);
         console.log("index = " + index + ", y = " + shape.object3D.position.y);
         
         if (shape != null && NAF.connection.isConnected()) {
           NAF.utils.takeOwnership(shape);
-          shape.setAttribute('material', { color: Math.random() * 0xffffff });
+          // set physics object to kinematic so we can directly modify the position of the game objcets
+          shape.setAttribute('body-helper', { "type": "kinematic" });
         }
       }
+      
+      // here is the actual code for determing the position and orientation of the current jenga block
       var x = marginedBrickWidth * row;
       var y = level * marginedBrickHeight;
       var z = 0;
@@ -491,10 +424,7 @@ window.mod_addJengaTower = function() { // NAF
       shape.object3D.position.y = y;
       shape.object3D.position.z = z;
     
-      // shape.setAttribute("position", { "x": x, "y": y, "z": z }); // THREE.BufferAttribute() // new THREE.Vector3();
-      // var newPosition = new THREE.Vector3(x, y, z);
       shape.setAttribute("position", { "x": x, "y": y, "z": z });
-      // shape.object3D.position.copy(newPosition);
       // shape.object3D.position.set(x, y, z);
       shape.object3D.rotation.x = 0;
       shape.object3D.rotation.y = rotation;
@@ -503,18 +433,15 @@ window.mod_addJengaTower = function() { // NAF
       console.log(shape);
       
       // shape.object3D.matrixNeedsUpdate = true;
-      shape.object3D.updateMatrices();
-      
-      var positionString = x + " " + y + " " + z;
-      // shape.setAttribute("position", positionString);
-      // shape.setAttribute("position", { x: x, y: y, z: z } );
-      // shape.setAttribute("rotation", { x: 0, y: rotation, z: 0 } );
-      
-      // newJengaBlocks.push(shape);
+      // shape.object3D.updateMatrices();
+
       if (!initialized) {
         jengaBlocks.push(shape);
       } else {
-        // jengaBlocks.push(shape);
+        // we can't unfreeze the jenga tower immediately otherwise the jenga blocks positions won't update
+        // this part needs to fixed soon because it is very prone to error and race conditions
+        setTimeout(mod_unfreezeJengaTower, 100);
+        // shape.setAttribute('body-helper', { "type": "dynamic" });
       }
       index++;
     }
@@ -524,46 +451,20 @@ window.mod_addJengaTower = function() { // NAF
   return jengaBlocks;
 };
 
-window.mod_addJengaTowerOld = function() {
-  mod_removeJengaTower();
-  var levels = 18;
-  var rows = 3;
-  var brickWidth = 2.5 / 3.0;
-  var brickHeight = 1.5 / 3.0;
-  var brickDepth = 7.5 / 3.0;
-  var margin = {x: 0.001, y: 0.001};
-  var origin = {x: 0, y: 0, z: 0};
+window.mod_unfreezeJengaTower = function(physicsState) {
+  mod_setJengaTowerPhysicsState("dynamic");
+};
 
-  var marginedBrickWidth = brickWidth + margin.x;
-  var marginedBrickHeight = brickHeight + margin.y;
-  origin.y += marginedBrickHeight;
-  
-  for (var level = 0; level < levels; level++) {
-    for (var row = 0; row < rows; row++) {
-      // var shape = mod_addJengaBrick("brick-" + row);
-      var shape = mod_addJengaBrick("jenga-brick");
-      var x = marginedBrickWidth * row;
-      var y = level * marginedBrickHeight;
-      var z = 0;
-      var rotation = 0;
-      if (level % 2 == 1) {
-        // if this is an odd level
-        var temp = x;
-        x = z;
-        z = temp - marginedBrickWidth;
-        // rotate each brick 90 degrees
-        rotation = Math.PI / 2.0;
-      } else {
-        x = x - marginedBrickWidth;
-      }
-      shape.object3D.position.x = origin.x + x;
-      shape.object3D.position.y = origin.y + y;
-      shape.object3D.position.z = origin.z + z;
-      shape.object3D.rotation.y = rotation;
-      jengaBlocks.push(shape);
+window.mod_freezeJengaTower = function(physicsState) {
+  mod_setJengaTowerPhysicsState("kinematic");
+};
+
+window.mod_setJengaTowerPhysicsState = function(physicsState) {
+  for (var block of jengaBlocks) {
+    if (block != null) {
+      block.setAttribute('body-helper', { "type": physicsState });
     }
   }
-  return jengaBlocks;
 };
 
 window.mod_removeJengaTower = function() {
