@@ -1,4 +1,5 @@
 // https://incandescent-psychedelic-spark.glitch.me/components/jenga.js 
+// http://aelatgt.link/JKHJVgF
 
 /**
  * This function contains a little json parser to make creating shape templates easier.
@@ -61,7 +62,7 @@ function addShapeTemplate(json, id) {
       childProperties += subValue;
     }
     */
-    console.log(childProperties);
+    // console.log(childProperties);
     var attribute = document.createAttribute(key);
     attribute.value = childProperties;
     newEntity.setAttributeNode(attribute);
@@ -237,18 +238,6 @@ window.mod_addLighting = function() {
  * This function is for debugging purposes only.
  */
 window.mod_addAxis = function() {
-  // primitive: cylinder; radius: 0.25; height: 2;
-  // bh = document.createAttribute("material");
-	// bh.value = "color:tomato;metalness:1.0;roughness:.8;";
-  /*
-  var json = {
-    "geometry": {
-      "primitive": "cylinder",
-      "radius": 0.25,
-      "height": 2,
-    }
-  };
-  */
   var xJson = {
     "geometry": {
       "primitive": "box",
@@ -280,6 +269,8 @@ window.mod_addAxis = function() {
       "roughness": .8,
     },
   };
+  
+  // note that the y-axis is just up and down
 
   var zShape = mod_addShape(zJson, "z-axis");
   zShape.object3D.position.z = 20;
@@ -389,7 +380,7 @@ window.mod_addJengaTower = function() { // NAF
         shape = jengaBlocks[index];
         // or get the shape from the dom (this may work better for networking)
         // shape = document.querySelector("#naf-jenga-brick-" + index);
-        console.log("index = " + index + ", y = " + shape.object3D.position.y);
+        // console.log("index = " + index + ", y = " + shape.object3D.position.y);
         
         if (shape != null && NAF.connection.isConnected()) {
           NAF.utils.takeOwnership(shape);
@@ -429,9 +420,7 @@ window.mod_addJengaTower = function() { // NAF
       shape.object3D.rotation.x = 0;
       shape.object3D.rotation.y = rotation;
       shape.object3D.rotation.z = 0;
-      
-      console.log(shape);
-      
+            
       // shape.object3D.matrixNeedsUpdate = true;
       // shape.object3D.updateMatrices();
 
