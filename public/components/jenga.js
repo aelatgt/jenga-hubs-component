@@ -321,7 +321,7 @@ window.mod_addJengaBrickFromTemplate = function(brickId) {
   shape.setAttribute("networked", { 
     template: "#" + id,
     networkId: "" + id + "-" + brickId,
-  // owner: 'scene'
+    // owner: 'scene'
   });
   
 	return shape;
@@ -377,13 +377,13 @@ window.mod_addJengaTower = function() { // NAF
         */
       } else {
         // get the shape from the list of shapes
-        shape = jengaBlocks[index];
+        // shape = jengaBlocks[index];
         // or get the shape from the dom (this may work better for networking)
-        // shape = document.querySelector("#naf-jenga-brick-" + index);
+        shape = document.querySelector("#naf-jenga-brick-" + index);
         // console.log("index = " + index + ", y = " + shape.object3D.position.y);
         
         if (shape != null && NAF.connection.isConnected()) {
-          NAF.utils.takeOwnership(shape);
+          // NAF.utils.takeOwnership(shape);
           // set physics object to kinematic so we can directly modify the position of the game objcets
           shape.setAttribute('body-helper', { "type": "kinematic" });
         }
