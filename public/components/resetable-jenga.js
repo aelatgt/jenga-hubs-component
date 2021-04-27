@@ -9,7 +9,7 @@ AFRAME.registerComponent('resetable-jenga', {
     event: { type: 'string' },
   },
   update: function (oldData) {
-    this.el.removeEventListener(oldData.event, this.listener)
+    this.el.removeEventListener(oldData.event, this.listener);
     this.listener = this.el.addEventListener(this.data.event, () => {
       if (NAF.connection.isConnected()) {
         /**
@@ -17,7 +17,7 @@ AFRAME.registerComponent('resetable-jenga', {
          * to the networked properties to sync across clients.
          * You can also check whether you have ownership with NAF.utils.isMine(el)
          */
-        NAF.utils.takeOwnership(this.el)
+        NAF.utils.takeOwnership(this.el);
         // this.el.setAttribute('material', { color: Math.random() * 0xffffff })
         mod_addJengaTower();
       }

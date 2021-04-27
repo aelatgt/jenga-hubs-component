@@ -1,6 +1,6 @@
 // https://incandescent-psychedelic-spark.glitch.me/components/jenga.js 
 
-function inject_shapeType(json, id) {
+function addShapeTemplate(json, id) {
 				
 	//Query assets in order to setup template
 	let assets = document.querySelector("a-assets");
@@ -66,10 +66,12 @@ function inject_shapeType(json, id) {
 	newEntity.setAttribute("set-unowned-body-kinematic", "");
 	// sets the remote hover target component on the object
 	newEntity.setAttribute("is-remote-hover-target", "");
+  
+  
 				
 	// the tags component allows you to filter the collisions and interactable
 	// qualities of the entity.  We can reuse bh to set all it's values
-	bh = document.createAttribute("tags")
+	bh = document.createAttribute("tags");
 	// set it to be a hand collision target, holdable, give it a hand constraint, a remote constraint, and set to be inspectable with a right click.
 	bh.value = "isHandCollisionTarget: true; isHoldable: true; offersHandConstraint: true; offersRemoteConstraint: true; inspectable: true;";
 	newEntity.setAttributeNode(bh);
@@ -90,7 +92,7 @@ function inject_shapeType(json, id) {
 	// without it set on the actual entity which contains the mesh (set with the 
 	// geometry component above in this case) the physics won't collide and the 
 	// object will fall through the ground.  Check the component for details
-	bh = document.createAttribute("shape-helper")
+	bh = document.createAttribute("shape-helper");
 	bh.value = "";
 	newEntity.setAttributeNode(bh);
 				
@@ -115,6 +117,10 @@ function inject_shapeType(json, id) {
 			let prev = null;
 
 			return curr => {
+        // temp
+        // return false;
+        
+        
 				if (prev === null) {
 					prev = new THREE.Vector3(curr.x, curr.y, curr.z);
 					return true;
@@ -130,6 +136,7 @@ function inject_shapeType(json, id) {
 
 	// Add the new schema to NAF. and declare the networked components and their update 
 	// sensitivity using the function above if they modify the transforms.
+  /*
 	NAF.schemas.add({
 		template: "#" + id,
 		components: [
@@ -150,25 +157,69 @@ function inject_shapeType(json, id) {
 			"pinnable"
 		]
 	});
-		
+	*/
 }
 
-window.mod_addShape = function(attributes, id) {
-	inject_shapeType(attributes, id);
-  
+window.mod_addShapeFromTemplate = function(id) {  
 	// if(document.querySelector("a-entity[camera-cube-env]") == null){
 
-  var el = document.createElement("a-entity")
-  el.setAttribute("networked", { template: "#" + id } )
+  var el = document.createElement("a-entity");
+  el.setAttribute("networked", { 
+    template: "#" + id 
+  });
+  
+  
+  /*
+  // networkId: 'button',
+  // owner: 'scene',
+  entity.setAttribute('networked', {
+    template: '#color-media',
+    networkId: 'button',
+    owner: 'scene',
+  })
+  */
+  
   el.object3D.position.y = 2;
-  AFRAME.scenes[0].appendChild(el)
+  AFRAME.scenes[0].appendChild(el);
 		
 	//}else{
 	//	console.log("a ball already exists");
 	//}
 	
   return el;
-}
+};
+
+window.mod_addShape = function(attributes, id) {
+	addShapeTemplate(attributes, id);
+  // mod_addShapeFromTemplate(id)
+  
+	// if(document.querySelector("a-entity[camera-cube-env]") == null){
+
+  var el = document.createElement("a-entity");
+  el.setAttribute("networked", { 
+    template: "#" + id 
+  });
+  
+  
+  /*
+  // networkId: 'button',
+  // owner: 'scene',
+  entity.setAttribute('networked', {
+    template: '#color-media',
+    networkId: 'button',
+    owner: 'scene',
+  })
+  */
+  
+  el.object3D.position.y = 2;
+  AFRAME.scenes[0].appendChild(el);
+		
+	//}else{
+	//	console.log("a ball already exists");
+	//}
+	
+  return el;
+};
 
 window.mod_addLighting = function() {
   // primitive: cylinder; radius: 0.25; height: 2;
@@ -223,42 +274,11 @@ window.mod_addLighting = function() {
 
   var shape = mod_addShape(json, id);
   shape.object3D.position.x = 50;
-  shape.object3D.position.y = 30
+  shape.object3D.position.y = 30;
   shape.object3D.position.z = 50;
   
 	return shape;
-}
-
-window.mod_addBrick = function(id) {
-  // primitive: cylinder; radius: 0.25; height: 2;
-  // bh = document.createAttribute("material");
-	// bh.value = "color:tomato;metalness:1.0;roughness:.8;";
-  /*
-  var json = {
-    "geometry": {
-      "primitive": "cylinder",
-      "radius": 0.25,
-      "height": 2,
-    }
-  };
-  */
-  var json = {
-    "geometry": {
-      "primitive": "box",
-      "width": 0.5,
-      "height": 2,
-    },
-    "material": {
-      "color": "red",
-      "metalness": 1.0,
-      "roughness": .8,
-    },
-  };
-	var id = "interactable-box-media";
-
-  var shape = mod_addShape(json, id);
-	return shape;
-}
+};
 
 window.mod_addAxis = function() {
   // primitive: cylinder; radius: 0.25; height: 2;
@@ -307,8 +327,50 @@ window.mod_addAxis = function() {
 
   var zShape = mod_addShape(zJson, "z-axis");
   zShape.object3D.position.z = 20;
-}
+};
 
+window.mod_addJengaBrickTemplate = function() {
+  // single-action-button="event: click"
+  // randomize-networked-color="event: click"
+  var id = "jenga-brick";
+  var json = {
+    "geometry": {
+      "primitive": "box",
+      "width": 2.5 / 3.0,
+      "height": 1.5 / 3.0,
+      "depth": 7.5 / 3.0,
+    },
+    "material": {
+      "color": "#DEB887",
+      "metalness": 0.0,
+      "roughness": 1.0,
+      "emissiveIntensity": 0.25
+    },
+    "single-action-button": {
+      "event": "click"
+    },
+    "randomize-networked-color": {
+      "event": "click"
+    }
+  };
+  // making all of the bricks have this tag causes a bunch of weird behaviors over the network
+	// var id = "interactable-box-media";
+
+  addShapeTemplate(json, id);
+};
+
+window.mod_addJengaBrickFromTemplate = function(brickId) {
+  var id = "jenga-brick";
+  var shape = mod_addShapeFromTemplate(id);
+  
+  shape.setAttribute("networked", { 
+    template: "#" + id,
+    networkId: "" + id + "-" + brickId,
+  // owner: 'scene'
+  });
+  
+	return shape;
+};
 
 window.mod_addJengaBrick = function(id) {
   // primitive: cylinder; radius: 0.25; height: 2;
@@ -337,15 +399,132 @@ window.mod_addJengaBrick = function(id) {
       "emissiveIntensity": 0.25
     },
   };
-	var id = "interactable-box-media";
+  // making all of the bricks have this tag causes a bunch of weird behaviors over the network
+	// var id = "interactable-box-media";
 
   var shape = mod_addShape(json, id);
 	return shape;
-}
+};
 
 var jengaBlocks = [];
 
-window.mod_addJengaTower = function() {
+/**
+Creates the templates required to make a Jenga tower as well as other setup steps
+*/
+window.mod_setupJengaTower = function() {
+  mod_addJengaBrickTemplate();
+};
+mod_setupJengaTower();
+
+/*
+// ownership gets transferred once you click on an object
+if (NAF.utils.isMine(this.networkedEntity)) {
+
+}
+*/
+
+window.mod_addJengaTower = function() { // NAF
+  // initialized = false;
+  // mod_removeJengaTower();
+  var newJengaBlocks = [];
+  var initialized = jengaBlocks.length > 0;
+  var levels = 18;
+  var rows = 3;
+  var brickWidth = 2.5 / 3.0;
+  var brickHeight = 1.5 / 3.0;
+  var brickDepth = 7.5 / 3.0;
+  var margin = {x: 0.001, y: 0.001};
+  var origin = {x: 0, y: 0, z: 0};
+
+  var marginedBrickWidth = brickWidth + margin.x;
+  var marginedBrickHeight = brickHeight + margin.y;
+  origin.y += marginedBrickHeight;
+  
+  var index = 0;
+  for (var level = 0; level < levels; level++) {
+    for (var row = 0; row < rows; row++) {
+      // var shape = mod_addJengaBrick("brick-" + row);
+      // var shape = mod_addJengaBrick("jenga-brick");
+      // var shape = mod_addJengaBrickFromTemplate();
+      var shape;
+      if (!initialized) {
+        // create a brick from the template for the first time
+        shape = mod_addJengaBrickFromTemplate(index);
+        
+        if (shape != null && NAF.connection.isConnected()) {
+          // NAF.utils.takeOwnership(shape);
+          shape.setAttribute('material', { color: Math.random() * 0xffffff });
+        }
+      } else {
+        // get the shape from the list of shapes
+        // shape = jengaBlocks[index];
+        shape = document.querySelector("#naf-jenga-brick-" + index);
+        console.log("index = " + index + ", y = " + shape.object3D.position.y);
+        
+        if (shape != null && NAF.connection.isConnected()) {
+          NAF.utils.takeOwnership(shape);
+          shape.setAttribute('material', { color: Math.random() * 0xffffff });
+        }
+      }
+      var x = marginedBrickWidth * row;
+      var y = level * marginedBrickHeight;
+      var z = 0;
+      var rotation = 0;
+      if (level % 2 == 1) {
+        // if this is an odd level
+        var temp = x;
+        x = z;
+        z = temp - marginedBrickWidth;
+        // rotate each brick 90 degrees
+        rotation = Math.PI / 2.0;
+      } else {
+        x = x - marginedBrickWidth;
+      }
+      x += origin.x;
+      y += origin.y;
+      z += origin.z;
+      
+      // try setting position through the dom instead
+      // or taking ownership of the object first
+      // or updating by specifying matrixNeedsUpdate
+      shape.object3D.position.x = x;
+      shape.object3D.position.y = y;
+      shape.object3D.position.z = z;
+    
+      // shape.setAttribute("position", { "x": x, "y": y, "z": z }); // THREE.BufferAttribute() // new THREE.Vector3();
+      // var newPosition = new THREE.Vector3(x, y, z);
+      shape.setAttribute("position", { "x": x, "y": y, "z": z });
+      // shape.object3D.position.copy(newPosition);
+      // shape.object3D.position.set(x, y, z);
+      shape.object3D.rotation.x = 0;
+      shape.object3D.rotation.y = rotation;
+      shape.object3D.rotation.z = 0;
+      
+      console.log(shape);
+      
+      // shape.object3D.matrixNeedsUpdate = true;
+      shape.object3D.updateMatrices();
+      
+      var positionString = x + " " + y + " " + z;
+      // shape.setAttribute("position", positionString);
+      // shape.setAttribute("position", { x: x, y: y, z: z } );
+      // shape.setAttribute("rotation", { x: 0, y: rotation, z: 0 } );
+      
+      // newJengaBlocks.push(shape);
+      if (!initialized) {
+        jengaBlocks.push(shape);
+      } else {
+        // jengaBlocks.push(shape);
+      }
+      index++;
+    }
+  }
+  
+  // jengaBlocks = newJengaBlocks;
+  return jengaBlocks;
+};
+
+window.mod_addJengaTowerOld = function() {
   mod_removeJengaTower();
   var levels = 18;
   var rows = 3;
@@ -361,7 +540,8 @@ window.mod_addJengaTower = function() {
   
   for (var level = 0; level < levels; level++) {
     for (var row = 0; row < rows; row++) {
-      var shape = mod_addJengaBrick("brick-" + row);
+      // var shape = mod_addJengaBrick("brick-" + row);
+      var shape = mod_addJengaBrick("jenga-brick");
       var x = marginedBrickWidth * row;
       var y = level * marginedBrickHeight;
       var z = 0;
@@ -383,8 +563,8 @@ window.mod_addJengaTower = function() {
       jengaBlocks.push(shape);
     }
   }
-
-}
+  return jengaBlocks;
+};
 
 window.mod_removeJengaTower = function() {
   for (var block of jengaBlocks) {
@@ -393,4 +573,4 @@ window.mod_removeJengaTower = function() {
     }
   }
   jengaBlocks = [];
-}
+};

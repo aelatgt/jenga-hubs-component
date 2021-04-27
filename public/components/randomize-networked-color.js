@@ -15,7 +15,9 @@ AFRAME.registerComponent('randomize-networked-color', {
          * to the networked properties to sync across clients.
          * You can also check whether you have ownership with NAF.utils.isMine(el)
          */
-        NAF.utils.takeOwnership(this.el)
+        NAF.utils.takeOwnership(this.el);
+        console.log("this.el = ");
+        console.log(this.el);
         this.el.setAttribute('material', { color: Math.random() * 0xffffff })
       }
     })
