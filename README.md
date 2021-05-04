@@ -1,10 +1,10 @@
-# Jena Component
+## Jena Component
 
 The Jenga component contains a button that creates an interactive Jenga tower. Pushing the button will create and reset the Jenga blocks to their initial position.
 
 You can demo the project here: [https://aelatgt.link/rfMDfvW](https://aelatgt.link/rfMDfvW) or [http://aelatgt.link/JKHJVgF](http://aelatgt.link/JKHJVgF).
 
-(Put a picture here)
+![Jenga Tower](jenga-tower.png "Jenga Tower")
 
 ## How to use this repo
 
